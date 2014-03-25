@@ -3,6 +3,7 @@ require './lib/employee'
 require './lib/sale'
 require './lib/product'
 require './lib/category'
+require './lib/cashier_log'
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
@@ -38,22 +39,51 @@ def main_menu
   end
 end
 
+#***********************************************
 
 def cashiers
   puts "*"*40, "CASHIERS", "*"*40
 
-  puts "\tEnter your login name to start your shift: "
+  puts "Would you like to log in, or log out? (I/O)"
+  user_input = gets.chomp.downcase
 
-  input = gets.chomp
-
-  if employees.login.include? input
-    puts "\t'#{login}' is now logged in.\n\n"
+  case user_input
+  when 'i'
+    log_in
+  when 'o'
+    log_out
   else
-    puts "\tUser not recognized. Please try again.\n\n"
-
+    puts "Not a valid input."
+    cashiers
   end
 end
 
+def log_in
+  puts "\tEnter your login information to start your shift: "
+  cashier_login = gets.chomp
+
+  signed_in_employee = Employee.find_by(:login => cashier_login)
+  unless signed_in_employee == nil
+    signed_in_employee.cashier_logs.create({ :InOut => true })
+    puts "You are now signed in.\n"
+  end
+  cashiers
+end
+
+
+def log_out
+   puts "\tEnter your login information to finish your shift: "
+  cashier_login = gets.chomp
+
+  signed_in_employee = Employee.find_by(:login => cashier_login)
+  unless signed_in_employee == nil
+    signed_in_employee.cashier_logs.create({ :InOut => false })
+    puts "You are now signed out.\n"
+  end
+  cashiers
+end
+
+#************************************************
 
 def managers
   puts "*"*40, "MANAGERS", "*"*40

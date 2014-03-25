@@ -6,6 +6,7 @@ require 'employee'
 require 'product'
 require 'sale'
 require 'category'
+require 'cashier_log'
 
 
 database_configuration = YAML::load(File.open('./db/config.yml'))
