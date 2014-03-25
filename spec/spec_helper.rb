@@ -5,6 +5,7 @@ require 'shoulda-matchers'
 require 'employee'
 require 'product'
 require 'sale'
+require 'category'
 
 
 database_configuration = YAML::load(File.open('./db/config.yml'))
