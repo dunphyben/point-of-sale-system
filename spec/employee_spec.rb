@@ -1,6 +1,6 @@
 require 'spec_helper'
 
 describe Employee do
-  it { should have_many :product }
-  it { should have_many :sale }
+  it { should have_many :products }
+  it { should have_many :sales }
 end

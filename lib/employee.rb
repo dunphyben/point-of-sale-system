@@ -1,4 +1,4 @@
 class Employee < ActiveRecord::Base
-  has_many :sale
-  has_many :product, :through => :sale
+  has_many :sales
+  has_many :products, :through => :sale
 end

@@ -2,6 +2,7 @@ require 'active_record'
 require './lib/employee'
 require './lib/sale'
 require './lib/product'
+require './lib/category'
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
@@ -85,7 +86,7 @@ def add_employee
   puts "What will the employee's login be?"
   login = gets.chomp
   new_employee = Employee.create({ :last_name => last_name, :first_name => first_name, :login => login })
-  puts "New Employee added.\n"
+  puts "\n\nNew Employee #{last_name}, #{first_name} added to the employee database with the username #{login}.\n\n"
   managers
 end
 
@@ -96,9 +97,16 @@ def add_product
   product_price = gets.chomp
   puts "What category does this product belong to?"
   category_name = gets.chomp
-  new_product = Product.create({ name: product_name, price: product_price, category: category_name})
-  puts "The product '#{product_name}' has been added to category '#{category_name}' at the price of '$#{product_price}'.\n\n"
+  new_category = Category.create({ :name => category_name })
+  puts "How many items are you adding to inventory?"
+  inventory_amount = gets.chomp
+  new_category.products.create({ :name => product_name, :price => product_price, :quantity => inventory_amount })
+  puts "\n\n'#{inventory_amount}' of the product '#{product_name}' has been added at the price of '$#{product_price}'.\n\n"
   managers
+end
+
+def increase_existing_inventory
+
 end
 
 

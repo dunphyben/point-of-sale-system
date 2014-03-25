@@ -1,5 +1,5 @@
 class Product < ActiveRecord::Base
-  has_many :sale
-  has_many :employee, :through => :sale
+  has_many :sales
+  has_many :employees, :through => :sales
   belongs_to :category
 end
