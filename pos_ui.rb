@@ -9,10 +9,6 @@ database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
 ActiveRecord::Base.establish_connection(development_configuration)
 
-def welcome
-  puts "Welcome to your POS System"
-  main_menu
-end
 
 def main_menu
   puts "*"*40, "MAIN MENU", "*"*40
@@ -63,11 +59,15 @@ def log_in
   cashier_login = gets.chomp
 
   signed_in_employee = Employee.find_by(:login => cashier_login)
-  unless signed_in_employee == nil
+  if signed_in_employee == nil
+    puts "\n\nEmployee login not recognized. Please try again.\n\n"
+  elsif signed_in_employee.cashier_logs.last.InOut == true
+    puts "\n\nCashier already signed in.\n\n"
+
+  else
     signed_in_employee.cashier_logs.create({ :InOut => true })
-    puts "You are now signed in.\n"
+      puts "\n\nYou are now signed in.\n\n"
   end
-  cashiers
 end
 
 
@@ -76,11 +76,14 @@ def log_out
   cashier_login = gets.chomp
 
   signed_in_employee = Employee.find_by(:login => cashier_login)
-  unless signed_in_employee == nil
+  if signed_in_employee == nil
+    puts "Employee login not recognized. Please try again.\n\n"
+  elsif signed_in_employee.cashier_logs.last.InOut == false
+    puts "\n\nCashier already signed out.\n\n"
+  else
     signed_in_employee.cashier_logs.create({ :InOut => false })
     puts "You are now signed out.\n"
   end
-  cashiers
 end
 
 #************************************************
@@ -116,6 +119,7 @@ def add_employee
   puts "What will the employee's login be?"
   login = gets.chomp
   new_employee = Employee.create({ :last_name => last_name, :first_name => first_name, :login => login })
+  new_employee.cashier_logs.create({ :InOut => false })
   puts "\n\nNew Employee #{last_name}, #{first_name} added to the employee database with the username #{login}.\n\n"
   managers
 end
@@ -136,9 +140,9 @@ def add_product
 end
 
 def increase_existing_inventory
-
+#future function to add new inventory to an existing product type
 end
 
 
 
-welcome
+main_menu
